@@ -1,12 +1,14 @@
-const AWS = require('aws-sdk');
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
 const SES_CONFIG = {
-  accessKeyId: process.env.MY_AWS_ACCESS_KEY,
-  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+  credentials: {
+    accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+  },
   region: process.env.MY_AWS_SES_REGION,
 };
 
-const AWS_SES = new AWS.SES(SES_CONFIG);
+const sesClient = new SESClient(SES_CONFIG);
 
 const sendEmail = async (url, email, name) => {
   let params = {
@@ -33,8 +35,9 @@ const sendEmail = async (url, email, name) => {
     },
   };
   try {
-    const res = await AWS_SES.sendEmail(params).promise();
-    console.log(`Email has been sent`, res, email, name);
+    const sendEmailCommand = new SendEmailCommand(params);
+    const res = await sesClient.send(sendEmailCommand);
+    console.log(`Email has been sent`, res);
   } catch (error) {
     console.log(error);
   }
