@@ -44,8 +44,7 @@ const signUp = async (req, res, next) => {
     });
 
     // 2. Send verification email
-    sendEmail(url(user.verificationToken, req), email);
-
+    await sendEmail(url(user.verificationToken, req), email, name);
     res.status(201).json({
       status: 'success',
       message:
