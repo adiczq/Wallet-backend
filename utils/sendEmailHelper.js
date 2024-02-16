@@ -1,29 +1,43 @@
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const AWS = require('aws-sdk');
 
-const sendEmail = (url, email) => {
-  // const msg = {
-  //   to: email,
-  //   from: 'adiczq@gmail.com',
-  //   subject: 'Email verification',
-  //   text: `Verify your email by clicking on the link - ${url}`,
-  // };
-  const msg = {
-    to: email,
-    from: 'adiczq@gmail.com',
-    dynamic_template_data: {
-      url: url,
+const SES_CONFIG = {
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_SES_REGION,
+};
+
+const AWS_SES = new AWS.SES(SES_CONFIG);
+
+const sendEmail = async (url, email, name) => {
+  let params = {
+    Source: process.env.AWS_SES_SENDER,
+    Destination: {
+      ToAddresses: [email],
     },
-    template_id: 'd-e4c7c066815c437388885b7c964d5cfc',
+    ReplyToAddresses: [],
+    Message: {
+      Body: {
+        Html: {
+          Charset: 'UTF-8',
+          Data: `Hello ${name}, please verify your email addres clicking this ${url}`,
+        },
+        Text: {
+          Charset: 'UTF-8',
+          Data: `hello ${name}, please verify your email addres clicking this ${url}`,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: `${name}'s Email Verification`,
+      },
+    },
   };
-  sgMail
-    .send(msg)
-    .then(() => {
-      console.log('Email sent');
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  try {
+    const res = await AWS_SES.sendEmail(params).promise();
+    console.log(`Email has been sent`, res, email, name);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {
