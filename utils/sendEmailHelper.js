@@ -19,7 +19,7 @@ const sendEmail = async (url, email, name) => {
       Body: {
         Html: {
           Charset: 'UTF-8',
-          Data: `Hello ${name}, please verify your email addres clicking this ${url}`,
+          Data: `Hello ${name}, please verify your email addres by clicking this address ${url}`,
         },
         Text: {
           Charset: 'UTF-8',
