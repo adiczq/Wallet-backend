@@ -1,16 +1,16 @@
 const AWS = require('aws-sdk');
 
 const SES_CONFIG = {
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_SES_REGION,
+  accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+  region: process.env.MY_AWS_SES_REGION,
 };
 
 const AWS_SES = new AWS.SES(SES_CONFIG);
 
 const sendEmail = async (url, email, name) => {
   let params = {
-    Source: process.env.AWS_SES_SENDER,
+    Source: process.env.MY_AWS_SES_SENDER,
     Destination: {
       ToAddresses: [email],
     },
