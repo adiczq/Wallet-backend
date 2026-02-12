@@ -2,6 +2,8 @@ const Mailjet = require('node-mailjet');
 const mailjet = Mailjet.apiConnect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
 
 const sendEmail = async (url, email, name) => {
+  console.log('📧 sendEmail called with:', { url, email, name });
+
   const request = mailjet.post('send', { version: 'v3.1' }).request({
     Messages: [
       {
