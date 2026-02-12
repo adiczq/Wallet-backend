@@ -1,5 +1,11 @@
 require('dotenv').config();
-
+if (process.env.NODE_ENV !== 'production') {
+  console.log('📨 Mailjet config:', {
+    hasPublic: !!process.env.MJ_APIKEY_PUBLIC,
+    hasPrivate: !!process.env.MJ_APIKEY_PRIVATE,
+    sender: process.env.MAILJET_SENDER_EMAIL,
+  });
+}
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -12,7 +18,9 @@ const errorHandler = require('./controllers/errorController');
 const app = express();
 
 // Middlewares
-app.use(morgan(app.get('env') === 'development' ? 'dev' : 'short'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 app.use(
   cors({
     origin: 'https://walletappbyadiczq.netlify.app',
