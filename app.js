@@ -13,7 +13,14 @@ const app = express();
 
 // Middlewares
 app.use(morgan(app.get('env') === 'development' ? 'dev' : 'short'));
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://walletappbyadiczq.netlify.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
